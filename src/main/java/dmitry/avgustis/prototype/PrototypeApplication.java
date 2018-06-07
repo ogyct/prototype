@@ -11,5 +11,6 @@ public class PrototypeApplication {
 		/*
 		TODO exception handling, security, swagger customization
 		 */
+		//http://localhost:8081/h2-console
     }
 }
