@@ -1,6 +1,6 @@
 package dmitry.avgustis.prototype.config;
 
-import dmitry.avgustis.prototype.service.MyUserDetailService;
+import dmitry.avgustis.prototype.service.impl.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,12 +29,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/h2-console/**").permitAll();
         http.csrf().disable();
         http.headers().frameOptions().disable();
-        http.authorizeRequests().antMatchers("/swagger-ui.html").authenticated().and().formLogin().permitAll();
+//        http.authorizeRequests().antMatchers("/swagger-ui.html").hasRole("ADMIN").anyRequest()
+//                .authenticated().and().httpBasic();
+        http.authorizeRequests().antMatchers("/**").permitAll().and()
+                .authorizeRequests().antMatchers("/h2-console/**").permitAll();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
-        auth.authenticationProvider(authenticationProvider());
+        auth.authenticationProvider(authenticationProvider()).authenticationProvider(customAuthProvider);
     }
 
     @Bean

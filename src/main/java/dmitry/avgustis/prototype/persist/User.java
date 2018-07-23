@@ -1,15 +1,22 @@
 package dmitry.avgustis.prototype.persist;
 
+import dmitry.avgustis.prototype.domain.UserRole;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false, unique = true)
     private String username;
     private String password;
+    @ElementCollection(targetClass = UserRole.class)
+    @Enumerated(EnumType.STRING)
+    private Set<UserRole> roles;
+
 
     @Override
     public String toString() {
@@ -42,5 +49,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<UserRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
     }
 }

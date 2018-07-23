@@ -1,8 +1,8 @@
 package dmitry.avgustis.prototype.endpoint;
 
+import com.test.GetCountryRequest;
+import com.test.GetCountryResponse;
 import dmitry.avgustis.prototype.repository.CountryRepository;
-import io.spring.guides.gs_producing_web_service.GetCountryRequest;
-import io.spring.guides.gs_producing_web_service.GetCountryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;

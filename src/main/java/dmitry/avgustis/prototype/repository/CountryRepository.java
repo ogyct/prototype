@@ -1,7 +1,7 @@
 package dmitry.avgustis.prototype.repository;
 
-import io.spring.guides.gs_producing_web_service.Country;
-import io.spring.guides.gs_producing_web_service.Currency;
+import com.test.Country;
+import com.test.Currency;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 

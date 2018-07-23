@@ -1,9 +1,7 @@
 package dmitry.avgustis.prototype.config;
 
+import dmitry.avgustis.prototype.ws.CalculatorClient;
 import dmitry.avgustis.prototype.ws.CountryClient;
-import io.spring.guides.gs_producing_web_service.CountriesPort;
-import io.spring.guides.gs_producing_web_service.GetCountryRequest;
-import io.spring.guides.gs_producing_web_service.GetCountryResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -16,7 +14,7 @@ public class WsClientConfig {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
         // this package must match the package in the <generatePackage> specified in
         // pom.xml
-        marshaller.setContextPath("io.spring.guides.gs_producing_web_service");
+        marshaller.setContextPath("hello.wsdl");
         return marshaller;
     }
 
@@ -29,7 +27,15 @@ public class WsClientConfig {
         return client;
     }
 
-
+    @Bean
+    public CalculatorClient calculatorClient(Jaxb2Marshaller marshaller) {
+        CalculatorClient client = new CalculatorClient();
+        //TODO property
+        client.setDefaultUri("http://www.dneonline.com/calculator.asmx");
+        client.setMarshaller(marshaller);
+        client.setUnmarshaller(marshaller);
+        return client;
+    }
 
 
 }

@@ -2,6 +2,8 @@ package dmitry.avgustis.prototype;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dmitry.avgustis.prototype.persist.Student;
+import dmitry.avgustis.prototype.ws.CalculatorClient;
+import hello.wsdl.AddResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static dmitry.avgustis.prototype.controller.v1.StudentController.STUDENT_API_PREFIX;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -37,6 +40,8 @@ public class PrototypeApplicationTests {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private CalculatorClient calculatorClient;
 
     @Test
     public void testGet() throws Exception {
@@ -50,6 +55,12 @@ public class PrototypeApplicationTests {
         this.mockMvc.perform(put("/" + STUDENT_API_PREFIX + "/addStudent").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(john)))
                 .andDo(print()).andExpect(content().string(containsString("John")));
         this.mockMvc.perform(delete("/" + STUDENT_API_PREFIX + "/deleteStudent?id=3")).andDo(print()).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void testWsClient() {
+        AddResponse response = calculatorClient.add(1, 2);
+        assertEquals(3, response.getAddResult());
     }
 
 }

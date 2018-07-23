@@ -1,6 +1,6 @@
-package dmitry.avgustis.prototype.service;
+package dmitry.avgustis.prototype.service.impl;
 
-import dmitry.avgustis.prototype.domain.MyUserPrincipal;
+import dmitry.avgustis.prototype.domain.UserRole;
 import dmitry.avgustis.prototype.persist.User;
 import dmitry.avgustis.prototype.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class MyUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
@@ -24,6 +27,17 @@ public class MyUserDetailService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        return new MyUserPrincipal(user);
+        String[] roles = new String[user.getRoles().size()];
+        int i = 0;
+        for (UserRole role : user.getRoles()) {
+            roles[i] = role.toString();
+            i++;
+        }
+
+        return org.springframework.security.core.userdetails.User.withUsername(username)
+                .password(user.getPassword())
+                .roles(roles)
+                .build();
+//        return new MyUserPrincipal(user);
     }
 }
