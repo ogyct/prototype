@@ -9,9 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = StudentController.STUDENT_API_PREFIX, produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin()
 public class StudentController {
 
 
@@ -42,8 +44,13 @@ public class StudentController {
     }
 
     @PostMapping("/editStudent")
-    public Student editStudent(Student student) {
+    public Student editStudent(@RequestBody @Valid Student student) {
         return repo.saveAndFlush(student);
+    }
+
+    @GetMapping("/getAllStudents")
+    public List<Student> getAllStudents() {
+        return repo.findAll();
     }
 
 }
