@@ -1,11 +1,6 @@
 package dmitry.avgustis.prototype.persist;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -17,6 +12,7 @@ public class Student {
     @NotNull
     private String name;
     @NotNull
+    @Column(name = "passport_number")
     private String passportNumber;
 
     @Override

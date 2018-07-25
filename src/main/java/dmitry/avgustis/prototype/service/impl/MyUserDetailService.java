@@ -1,18 +1,23 @@
 package dmitry.avgustis.prototype.service.impl;
 
-import dmitry.avgustis.prototype.domain.UserRole;
 import dmitry.avgustis.prototype.persist.User;
 import dmitry.avgustis.prototype.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
+@Primary
 public class MyUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
@@ -22,22 +27,17 @@ public class MyUserDetailService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(s);
+
         if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
-        String[] roles = new String[user.getRoles().size()];
-        int i = 0;
-        for (UserRole role : user.getRoles()) {
-            roles[i] = role.toString();
-            i++;
+            throw new UsernameNotFoundException(String.format("The username %s doesn't exist", s));
         }
 
-        return org.springframework.security.core.userdetails.User.withUsername(username)
-                .password(user.getPassword())
-                .roles(roles)
-                .build();
-//        return new MyUserPrincipal(user);
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getRoleName())));
+
+        return new org.springframework.security.core.userdetails.
+                User(user.getUsername(), user.getPassword(), authorities);
     }
 }
