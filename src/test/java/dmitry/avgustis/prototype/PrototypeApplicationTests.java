@@ -9,7 +9,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles(value = "test")
 public class PrototypeApplicationTests {
 
 //	@Autowired
@@ -63,4 +69,16 @@ public class PrototypeApplicationTests {
         assertEquals(3, response.getAddResult());
     }
 
+}
+
+@Configuration
+@Profile("test")
+class ApplicationSecurity extends WebSecurityConfigurerAdapter {
+
+    @Override
+    public void configure(WebSecurity web) {
+        web
+                .ignoring()
+                .antMatchers("/**");
+    }
 }

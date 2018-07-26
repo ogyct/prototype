@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -24,6 +25,7 @@ import java.util.Collections;
 
 @Configuration
 @EnableAuthorizationServer
+@Profile({"development", "production"})
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Value("${security.jwt.client-id}")
@@ -80,9 +82,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     @Override
-    @SuppressWarnings("deprecated")
+    @SuppressWarnings("deprecation")
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer.passwordEncoder(NoOpPasswordEncoder.getInstance());
+        oauthServer.checkTokenAccess("permitAll()");
     }
 
     @Bean
