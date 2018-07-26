@@ -2,14 +2,19 @@ package dmitry.avgustis.prototype.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.ModelRef;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableSwagger2
@@ -18,8 +23,23 @@ public class SwaggerConfig implements WebMvcConfigurer {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("dmitry.avgustis.prototype.controller.v1"))
+                //.apis(RequestHandlerSelectors.basePackage("dmitry.avgustis.prototype.controller.v1"))
                 .paths(PathSelectors.any())
+                .build()
+                .globalOperationParameters(getGlobalOperationParameters());
+    }
+
+    private List<Parameter> getGlobalOperationParameters() {
+        return Collections.singletonList(this.getAuthorizationHeader());
+    }
+
+    @Nullable
+    private Parameter getAuthorizationHeader() {
+        return (new ParameterBuilder())
+                .description("OAuth2 access token")
+                .name("Authorization")
+                .parameterType("header")
+                .modelRef(new ModelRef("string"))
                 .build();
     }
 
